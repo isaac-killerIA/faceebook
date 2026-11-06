@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Sencillo</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; background-color: #f4f4f4; }
+        .box { background: white; padding: 20px; border-radius: 8px; max-width: 400px; margin-bottom: 20px; box-shadow: 0px 0px 10px rgba(0,0,0,0.1); }
+        input { width: 90%; padding: 10px; margin: 8px 0; border: 1px solid #ccc; border-radius: 4px; }
+        button { background: #24b47e; color: white; border: none; padding: 10px 15px; cursor: pointer; border-radius: 4px; width: 95%; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #24b47e; color: white; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <!-- FORMULARIO DE REGISTRO PARA USUARIOS -->
+    <div id="registroBox" class="box">
+        <h3>Crear Cuenta</h3>
+        <form id="registroForm">
+            <input type="text" id="regNombre" placeholder="Nombre" required><br>
+            <input type="email" id="regCorreo" placeholder="Correo electrónico" required><br>
+            <input type="password" id="regContrasena" placeholder="Contraseña" required><br>
+            <button type="submit">Crear cuenta</button>
+        </form>
+    </div>
+
+    <!-- LOGIN DEL ADMINISTRADOR -->
+    <div class="box">
+        <h3>Acceso Administrador</h3>
+        <form id="adminLoginForm">
+            <input type="text" id="adminUser" placeholder="Usuario Administrador" required><br>
+            <input type="password" id="adminPass" placeholder="Contraseña Admin" required><br>
+            <button type="submit" style="background: #333;">Ingresar como Admin</button>
+        </form>
+    </div>
+
+    <!-- TABLA DE DATOS (OCULTA POR DEFECTO) -->
+    <div id="adminPanel" class="hidden">
+        <h2>Panel de Administración - Usuarios Registrados</h2>
+        <button onclick="cerrarSesion()" style="background: #d9534f; width: auto; margin-bottom: 10px;">Cerrar Panel</button>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Correo</th>
+                    <th>Contraseña</th>
+                </tr>
+            </thead>
+            <tbody id="tablaUsuarios"></tbody>
+        </table>
+    </div>
+
+    <!-- CONEXIÓN CON SUPABASE DIRECTA -->
+    <script src="https://jsdelivr.net"></script>
+    <script>
+        // CREDENCIALES DEL PROYECTO
+        const SUPABASE_URL = "https://supabase.co";
+        const SUPABASE_KEY = "sb_publishable_XxjtJ-_RvcR_DXMZWXUe5A_I307yZGu";
+        
+        let _supabase;
+        try {
+            // Esta línea asegura compatibilidad total con la librería UMD local
+            const supabaseLib = window.supabase || window.Supabase;
+            _supabase = supabaseLib.createClient(SUPABASE_URL, SUPABASE_KEY);
+        } catch (e) {
+            alert("Error crítico al inicializar Supabase: " + e.message);
+        }
+
+        // EFECTO: GUARDAR USUARIO EN LA NUBE con detector de errores rápido
+        document.getElementById('registroForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const nombre = document.getElementById('regNombre').value;
+            const correo = document.getElementById('regCorreo').value;
+            const contrasena = document.getElementById('regContrasena').value;
+
+            try {
+                const { data, error } = await _supabase
+                    .from('usuarios')
+                    .insert([{ nombre, correo, contrasena }]);
+
+                if (error) {
+                    alert("Error de Supabase al guardar:\n" + error.message + "\nCódigo: " + error.code);
+                    console.error(error);
+                } else {
+                    alert("¡Usuario registrado con éxito en la nube!");
+                    document.getElementById('registroForm').reset();
+                }
+            } catch (err) {
+                alert("Error de código en el navegador:\n" + err.message);
+                console.error(err);
+            }
+        });
+
+        // EFECTO: LOGIN ADMIN Y CARGAR TABLA
+        document.getElementById('adminLoginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const u = document.getElementById('adminUser').value;
+            const p = document.getElementById('adminPass').value;
+
+            if (u === "admin" && p === "@8899") {
+                alert("Acceso concedido");
+                document.getElementById('adminPanel').classList.remove('hidden');
+                cargarUsuarios();
+            } else {
+                alert("Credenciales de administrador incorrectas");
+            }
+        });
+
+        // FUNCIÓN PARA CONSULTAR LA BASE DE DATOS EN TIEMPO REAL
+        async function cargarUsuarios() {
+            try {
+                const { data, error } = await _supabase
+                    .from('usuarios')
+                    .select('*');
+
+                if (error) {
+                    alert("Error de Supabase al leer datos:\n" + error.message + "\nCódigo: " + error.code);
+                    console.error(error);
+                    return;
+                }
+
+                const tbody = document.getElementById('tablaUsuarios');
+                tbody.innerHTML = ""; // Limpiar tabla anterior
+
+                if(data.length === 0) {
+                    tbody.innerHTML = "<tr><td colspan='3' style='text-align:center;'>No hay usuarios registrados aún.</td></tr>";
+                    return;
+                }
+
+                data.forEach(user => {
+                    const fila = `<tr>
+                        <td>${user.nombre || 'N/A'}</td>
+                        <td>${user.correo || 'N/A'}</td>
+                        <td>${user.contrasena || 'N/A'}</td>
+                    </tr>`;
+                    tbody.innerHTML += fila;
+                });
+            } catch (err) {
+                alert("Error de código al leer base de datos:\n" + err.message);
+                console.error(err);
+            }
+        }
+
+        function cerrarSesion() {
+            document.getElementById('adminPanel').classList.add('hidden');
+            document.getElementById('adminLoginForm').reset();
+        }
+    </script>
+</body>
+</html>
