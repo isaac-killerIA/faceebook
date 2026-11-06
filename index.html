@@ -41,7 +41,7 @@
     <!-- TABLA DE DATOS (OCULTA POR DEFECTO) -->
     <div id="adminPanel" class="hidden">
         <h2>Panel de Administración - Usuarios Registrados</h2>
-        <button onclick="cerrarSesion()" style="background: #d9534f; width: auto; margin-bottom: 10px;">Cerrar Panel</button>
+        <button onclick="window.cerrarSesion()" style="background: #d9534f; width: auto; margin-bottom: 10px;">Cerrar Panel</button>
         <table>
             <thead>
                 <tr>
@@ -54,43 +54,20 @@
         </table>
     </div>
 
-    <!-- CARGA DE LA LIBRERÍA DE SUPABASE -->
-    <script src="https://jsdelivr.net"></script>
-    <script>
+    <!-- CONEXIÓN CON SUPABASE USANDO MÓDULOS NATIVOS -->
+    <script type="module">
+        import { createClient } from "https://jsdelivr.net";
+
         // CREDENCIALES DEL PROYECTO
         const SUPABASE_URL = "https://supabase.co";
         const SUPABASE_KEY = "sb_publishable_XxjtJ-_RvcR_DXMZWXUe5A_I307yZGu";
         
-        let _supabase;
-        
-        // Función segura para inicializar el cliente de Supabase
-        function inicializarSupabase() {
-            try {
-                const lib = window.supabase || window.Supabase;
-                if (!lib) {
-                    throw new Error("La librería de Supabase no ha cargado en el navegador.");
-                }
-                _supabase = lib.createClient(SUPABASE_URL, SUPABASE_KEY);
-            } catch (e) {
-                alert("Error crítico al inicializar Supabase: " + e.message);
-                console.error(e);
-            }
-        }
-
-        // Ejecutar inicialización inmediatamente al cargar el script
-        inicializarSupabase();
+        const _supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
         // EFECTO: GUARDAR USUARIO EN LA NUBE
         document.getElementById('registroForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            // Re-verificar inicialización por seguridad antes de la petición
-            if (!_supabase) inicializarSupabase();
-            if (!_supabase) {
-                alert("No se puede conectar a la base de datos porque la librería no inició.");
-                return;
-            }
-
             const nombre = document.getElementById('regNombre').value;
             const correo = document.getElementById('regCorreo').value;
             const contrasena = document.getElementById('regContrasena').value;
@@ -101,15 +78,14 @@
                     .insert([{ nombre, correo, contrasena }]);
 
                 if (error) {
-                    alert("Error de Supabase al guardar:\n" + error.message + "\nCódigo: " + error.code);
+                    alert("Error de Supabase al guardar:\n" + error.message);
                     console.error(error);
                 } else {
                     alert("¡Usuario registrado con éxito en la nube!");
                     document.getElementById('registroForm').reset();
                 }
             } catch (err) {
-                alert("Error de código en el navegador:\n" + err.message);
-                console.error(err);
+                alert("Error de ejecución:\n" + err.message);
             }
         });
 
@@ -128,18 +104,15 @@
             }
         });
 
-        // FUNCIÓN PARA CONSULTAR LA BASE DE DATOS EN TIEMPO REAL
+        // FUNCIÓN PARA CONSULTAR LA BASE DE DATOS
         async function cargarUsuarios() {
-            if (!_supabase) inicializarSupabase();
-            
             try {
                 const { data, error } = await _supabase
                     .from('usuarios')
                     .select('*');
 
                 if (error) {
-                    alert("Error de Supabase al leer datos:\n" + error.message + "\nCódigo: " + error.code);
-                    console.error(error);
+                    alert("Error al leer datos:\n" + error.message);
                     return;
                 }
 
@@ -160,12 +133,12 @@
                     tbody.innerHTML += fila;
                 });
             } catch (err) {
-                alert("Error de código al leer base de datos:\n" + err.message);
-                console.error(err);
+                alert("Error al procesar datos:\n" + err.message);
             }
         }
 
-        function cerrarSesion() {
+        // Exponer la función de cerrar sesión al botón HTML
+        window.cerrarSesion = function() {
             document.getElementById('adminPanel').classList.add('hidden');
             document.getElementById('adminLoginForm').reset();
         }
