@@ -54,7 +54,7 @@
         </table>
     </div>
 
-    <!-- CONEXIÓN CON SUPABASE DIRECTA -->
+    <!-- CARGA DE LA LIBRERÍA DE SUPABASE -->
     <script src="https://jsdelivr.net"></script>
     <script>
         // CREDENCIALES DEL PROYECTO
@@ -62,17 +62,35 @@
         const SUPABASE_KEY = "sb_publishable_XxjtJ-_RvcR_DXMZWXUe5A_I307yZGu";
         
         let _supabase;
-        try {
-            // Esta línea asegura compatibilidad total con la librería UMD local
-            const supabaseLib = window.supabase || window.Supabase;
-            _supabase = supabaseLib.createClient(SUPABASE_URL, SUPABASE_KEY);
-        } catch (e) {
-            alert("Error crítico al inicializar Supabase: " + e.message);
+        
+        // Función segura para inicializar el cliente de Supabase
+        function inicializarSupabase() {
+            try {
+                const lib = window.supabase || window.Supabase;
+                if (!lib) {
+                    throw new Error("La librería de Supabase no ha cargado en el navegador.");
+                }
+                _supabase = lib.createClient(SUPABASE_URL, SUPABASE_KEY);
+            } catch (e) {
+                alert("Error crítico al inicializar Supabase: " + e.message);
+                console.error(e);
+            }
         }
 
-        // EFECTO: GUARDAR USUARIO EN LA NUBE con detector de errores rápido
+        // Ejecutar inicialización inmediatamente al cargar el script
+        inicializarSupabase();
+
+        // EFECTO: GUARDAR USUARIO EN LA NUBE
         document.getElementById('registroForm').addEventListener('submit', async (e) => {
             e.preventDefault();
+            
+            // Re-verificar inicialización por seguridad antes de la petición
+            if (!_supabase) inicializarSupabase();
+            if (!_supabase) {
+                alert("No se puede conectar a la base de datos porque la librería no inició.");
+                return;
+            }
+
             const nombre = document.getElementById('regNombre').value;
             const correo = document.getElementById('regCorreo').value;
             const contrasena = document.getElementById('regContrasena').value;
@@ -112,6 +130,8 @@
 
         // FUNCIÓN PARA CONSULTAR LA BASE DE DATOS EN TIEMPO REAL
         async function cargarUsuarios() {
+            if (!_supabase) inicializarSupabase();
+            
             try {
                 const { data, error } = await _supabase
                     .from('usuarios')
@@ -124,9 +144,9 @@
                 }
 
                 const tbody = document.getElementById('tablaUsuarios');
-                tbody.innerHTML = ""; // Limpiar tabla anterior
+                tbody.innerHTML = ""; 
 
-                if(data.length === 0) {
+                if (!data || data.length === 0) {
                     tbody.innerHTML = "<tr><td colspan='3' style='text-align:center;'>No hay usuarios registrados aún.</td></tr>";
                     return;
                 }
