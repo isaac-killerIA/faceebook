@@ -54,15 +54,13 @@
         </table>
     </div>
 
-    <!-- CONEXIÓN CON SUPABASE USANDO MÓDULOS NATIVOS -->
-    <script type="module">
-        import { createClient } from "https://jsdelivr.net";
-
-        // CREDENCIALES DEL PROYECTO
-        const SUPABASE_URL = "https://supabase.co";
-        const SUPABASE_KEY = "sb_publishable_XxjtJ-_RvcR_DXMZWXUe5A_I307yZGu";
-        
-        const _supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+<script type="module">
+    import { createClient } from "https://jsdelivr.net";
+    
+    const SUPABASE_URL = "https://supabase.co";
+    const SUPABASE_KEY = "sb_publishable_XxjtJ-_RvcR_DXMZWXUe5A_I307yZGu";
+    
+    const _supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
         // EFECTO: GUARDAR USUARIO EN LA NUBE
         document.getElementById('registroForm').addEventListener('submit', async (e) => {
